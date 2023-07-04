@@ -1,0 +1,7 @@
+[
+    { "text": "Version", "secondText": "2.93, build 230410.0859", "id": "1" },
+    { "text": "Privacy and Cookies", "button": true, "navigateTo": "sirishortcuts", "iconSize": 17, "iconType": "ionicon", "iconName": "chevron-forward", "iconColor": "#E4E4E4", "id": "2" },
+    { "text": "Export Your Info", "button": true, "navigateTo": "sirishortcuts", "iconSize": 17, "iconType": "ionicon", "iconName": "chevron-forward", "iconColor": "#E4E4E4", "id": "3" },
+    { "text": "Licence Terms", "button": true, "navigateTo": "sirishortcuts", "iconSize": 17, "iconType": "ionicon", "iconName": "chevron-forward", "iconColor": "#E4E4E4", "id": "4" },
+    { "text": "Third Party Notices", "button": true, "navigateTo": "sirishortcuts", "iconSize": 17, "iconType": "ionicon", "iconName": "chevron-forward", "iconColor": "#E4E4E4", "id": "5" }
+]

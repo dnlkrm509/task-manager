@@ -1,0 +1,7 @@
+[
+    { "text": "Get Support", "button": true, "linkTo": "", "id": "1" },
+    { "text": "FAQ", "button": true, "linkTo": "", "id": "2" },
+    { "text": "Suggest a Feature", "button": true, "linkTo": "", "id": "3" },
+    { "text": "Copy Session and User ID", "button": true, "linkTo": "", "id": "4" },
+    { "text": "Sync", "button": true, "linkTo": "", "thirdText": "Up to date", "id": "5" }
+]

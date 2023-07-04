@@ -1,0 +1,9 @@
+[
+    { "text": "All", "iconType": "font-awsome", "iconName": "toggle-off", "iconSize": 50, "iconColor": "#E4E4E4", "id": "1" },
+    { "text": "Important", "iconType": "font-awsome", "iconName": "toggle-on", "iconSize": 50, "iconColor": "blue", "id": "2" },
+    { "text": "Planned", "iconType": "font-awsome", "iconName": "toggle-on", "iconSize": 50, "iconColor": "blue", "id": "3" },
+    { "text": "Assigned to Me", "iconType": "font-awsome", "iconName": "toggle-on", "iconSize": 50, "iconColor": "blue", "id": "4" },
+    { "text": "Completed", "iconType": "font-awsome", "iconName": "toggle-off", "iconSize": 50, "iconColor": "#E4E4E4", "id": "5" },
+    { "text": "Auto-Hide Empty Smart Lists", "iconType": "font-awsome", "iconName": "toggle-off", "iconSize": 50, "iconColor": "#E4E4E4", "id": "6" },
+    { "text": "Show 'Due Today' Tasks in My Day", "iconType": "font-awsome", "iconName": "toggle-on", "iconColor": "blue", "iconSize": 50, "id": "7" }
+]
