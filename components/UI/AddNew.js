@@ -29,6 +29,7 @@ const AddNew = ({
                 <Button
                     buttonStyle={buttonStyle}
                     onPress={onPress}
+                    fullWidth
                 >
                     <View style={iconContainerStyle}>
                         {iconType && <Icon type={iconType} name={iconName} size={iconSize} color={iconColor} />}

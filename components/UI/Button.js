@@ -1,11 +1,22 @@
 import React from "react";
-import { TouchableOpacity, StyleSheet } from "react-native";
+import { TouchableOpacity, StyleSheet, useWindowDimensions } from "react-native";
 
-const Button = ({children, onPress, buttonStyle}) => {
+const Button = ({children, onPress, fullWidth, buttonStyle}) => {
+    const deviceHeight = useWindowDimensions().width;
+    const button = [styles.button];
+
+    if (fullWidth) {
+        button.push({ width: deviceHeight*0.85 });
+    }
+
+    if (buttonStyle) {
+        button.push(buttonStyle);
+    }
+
     return (
         <TouchableOpacity
             onPress={onPress}
-            style={[styles.button, buttonStyle]}
+            style={button}
         >
             {children}
         </TouchableOpacity>
@@ -19,7 +30,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         paddingVertical: 4,
         borderWidth: 0,
-        width: '100%'
     },
 });
 

@@ -9,7 +9,6 @@ import Title from '../components/AddNewList/Title';
 import Header from '../components/AddNewList/Header';
 import AddNew from '../components/UI/AddNew';
 import { Colors } from '../constants/colors';
-
 const AddNewListScreen = ({route}) => {
     const [value, setValue] = useState('');
     const deviceHeight = useWindowDimensions().height;

@@ -19,10 +19,10 @@ import { FormatNameContext } from '../../contexts/formatNameContext';
 import AddNew from '../UI/AddNew';
 import { ListContext } from '../../contexts/list-context';
 import { GroupContext } from '../../contexts/group-context';
+import ModalUI from '../UI/Modal';
 
 const Lists = () => {
     const navigation = useNavigation();
-    const deviceHeight = useWindowDimensions().height;
     const deviceWidth = useWindowDimensions().width;
 
     const nameCtx = useContext(FormatNameContext);
@@ -30,6 +30,7 @@ const Lists = () => {
     const groupCnx = useContext(GroupContext);
 
     const [value, setValue] = useState({});
+    const [modalIsVisible, setModalIsVisible] = useState(false);
 
     const fName = "dANiEl";
     const lName = "kARimi";
@@ -42,7 +43,13 @@ const Lists = () => {
     
     return (
         <View style={{flex:1,marginBottom:20}}>
-            <View style={[styles.detailsSearchContainer, {marginRight:24}]}>
+            <ModalUI
+                modalVisible={modalIsVisible}
+                onHideModal={() => setModalIsVisible(false)}
+            >
+                <Text>Content</Text>
+            </ModalUI>
+            <View style={[styles.detailsSearchContainer]}>
                 <Button
                     buttonStyle={[
                         styles.nameImageContainer,
@@ -52,6 +59,7 @@ const Lists = () => {
                         }
                     ]}
                     onPress={() => navigation.navigate('modal')}
+                    fullWidth
                 >
                     <View style={styles.image}>
                         <Text>{fLetterName}</Text>
@@ -177,7 +185,7 @@ const Lists = () => {
             }
             </ScrollView>
             <AddNew
-                containerStyle={[styles.detailsSearchContainer, {marginRight:24}]}
+                containerStyle={[styles.detailsSearchContainer]}
                 buttonStyle={styles.nameImageContainer}
                 onPress={() => navigation.navigate('addnew')}
                 iconContainerStyle={[styles.image, {backgroundColor:'transparent',borderRadius:0}]}
@@ -202,7 +210,7 @@ const Lists = () => {
                             text: "Create",
                             // create a group
                             onPress: (groupName) => {
-                                console.log(groupCnx.groups.length)
+                                setModalIsVisible(true);
                                 groupCnx.dispatch({
                                     type:'ADD',
                                     text: groupName,
