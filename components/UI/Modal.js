@@ -3,6 +3,7 @@ import { View, Text, ScrollView, StyleSheet } from "react-native";
 import Modal from "react-native-modal";
 import { TouchableHighlight } from "react-native-gesture-handler";
 import Button from "./Button";
+import { Colors } from "../../constants/colors";
 
 const ModalUI = ({
     modalVisible,
@@ -12,8 +13,16 @@ const ModalUI = ({
     propagateSwipe,
     swipeDirection,
     onHideModal,
+    height,
+    lineBreak,
     children
 }) => {
+    const container = [styles.container];
+
+    if (height) {
+        container.push({height:height});
+    }
+
     return (
         <View style={styles.root}>
             <Modal
@@ -26,19 +35,25 @@ const ModalUI = ({
                 propagateSwipe={propagateSwipe}
                 swipeDirection={swipeDirection}
             >
-                <View style={styles.container}>
+                <View style={container}>
                     <View style={styles.header}>
                         <Button
                             onPress={onHideModal}
                         >
                             <Text style={styles.text}>Cancel</Text>
                         </Button>
+                        <View>
+                            <Text style={[styles.text, {fontWeight:'bold',color:'black'}]}>
+                                Add lists to group
+                            </Text>
+                        </View>
                         <Button
                             onPress={onHideModal}
                         >
                             <Text style={styles.text}>Skip</Text>
                         </Button>
                     </View>
+                    {lineBreak && <View style={styles.lineBreak}></View>}
                     <View style={styles.content}>
                         <ScrollView>
                             {children}
@@ -68,18 +83,24 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
         borderRadius: 12,
-        padding: 12
     },
     header: {
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        padding: 12
     },
     text: {
         color: 'blue',
         fontSize: 18
     },
+    lineBreak: {
+        alignSelf: 'stretch',
+        height: 1,
+        backgroundColor: Colors.lineBreak
+    },
     content: {
-        padding: 12,
+        flex: 1,
+        padding: 24,
     }
 });
 

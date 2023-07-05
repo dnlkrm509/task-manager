@@ -46,8 +46,47 @@ const Lists = () => {
             <ModalUI
                 modalVisible={modalIsVisible}
                 onHideModal={() => setModalIsVisible(false)}
+                lineBreak
+                height={470}
             >
-                <Text>Content</Text>
+                {
+                listCnt.todos.length ? (
+                    <ScrollView
+                        horizontal={true}
+                        scrollEnabled={false}
+                        nestedScrollEnabled={true}
+                    >
+                        <FlatList 
+                            data={listCnt.todos}
+                            renderItem={({item}) => (
+                                <View>
+                                    <View style={styles.lineBreak}></View>
+                                    <AddNew
+                                        containerStyle={[styles.detailsSearchContainer, {marginBottom:0,height:55,backgroundColor:'green',width:deviceWidth*89/100}]}
+                                        buttonStyle={[styles.nameImageContainer, styles.button]}
+                                        iconContainerStyle={[styles.image, {backgroundColor:'transparent',borderRadius:0}]}
+                                        iconName='list'
+                                        iconSize={28}
+                                        iconColor='blue'
+                                        text={item.text ==='' ? <Text>Untitled list ({item.index})</Text> : <Text>{item.text}</Text>}
+                                        textStyle={{color:'black'}}
+                                        buttonIcon
+                                        buttonIconName='add'
+                                        buttonIconSize={32}
+                                        buttonIconColor='blue'
+                                    />
+                                    {item.index === listCnt.todos.length && <View style={styles.lineBreak}></View>}
+                                </View>
+                            )}
+                            keyExtractor={(todo) => todo.id}
+                            showsVerticalScrollIndicator={false}
+                            alwaysBounceVertical={false}
+                        />
+                    </ScrollView>
+                ) : (
+                    <Text></Text>
+                )
+                }
             </ModalUI>
             <View style={[styles.detailsSearchContainer]}>
                 <Button
@@ -260,7 +299,7 @@ const styles = StyleSheet.create({
     lineBreak: {
         alignSelf: 'stretch',
         height: 1,
-        backgroundColor: Colors.lineBreak
+        backgroundColor: Colors.lineBreak2
     }
 });
 
