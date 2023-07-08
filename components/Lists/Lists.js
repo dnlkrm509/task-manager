@@ -31,7 +31,7 @@ const Lists = () => {
 
     const [value, setValue] = useState({});
     const [modalIsVisible, setModalIsVisible] = useState(false);
-
+    
     const fName = "dANiEl";
     const lName = "kARimi";
     useEffect(() => {
@@ -40,6 +40,14 @@ const Lists = () => {
     
     const { fName: newFName, lName: newLName, fullName, fLetterName } = value;
     const { list:todos } = listCnt;
+
+    let checked = false;
+
+    for (const list of listCnt.todos){
+        if(list.checked){
+            checked = true;
+        }
+    }
     
     return (
         <View style={{flex:1,marginBottom:20}}>
@@ -48,6 +56,8 @@ const Lists = () => {
                 onHideModal={() => setModalIsVisible(false)}
                 lineBreak
                 height={470}
+                headerTitle='Add lists to group'
+                buttonText={checked ? 'Add' : 'Skip'}
             >
                 {
                 listCnt.todos.length ? (
@@ -60,22 +70,35 @@ const Lists = () => {
                             data={listCnt.todos}
                             renderItem={({item}) => (
                                 <View>
-                                    <View style={styles.lineBreak}></View>
+                                    <View style={[styles.lineBreak,{backgroundColor:Colors.lineBreak2}]}></View>
                                     <AddNew
-                                        containerStyle={[styles.detailsSearchContainer, {marginBottom:0,height:55,backgroundColor:'green',width:deviceWidth*89/100}]}
+                                        containerStyle={[styles.detailsSearchContainer, {marginBottom:0,height:55}]}
                                         buttonStyle={[styles.nameImageContainer, styles.button]}
+                                        onPress={() => {
+                                            const selectedList = listCnt.todos.find(
+                                                (todo) => todo.id === item.id
+                                            );
+                                            listCnt.dispatch({
+                                                type:'UPDATE',
+                                                id: item.id,
+                                                payload: {
+                                                    checked: !selectedList.checked
+                                                }
+                                            })
+                                        }}
                                         iconContainerStyle={[styles.image, {backgroundColor:'transparent',borderRadius:0}]}
                                         iconName='list'
                                         iconSize={28}
                                         iconColor='blue'
                                         text={item.text ==='' ? <Text>Untitled list ({item.index})</Text> : <Text>{item.text}</Text>}
                                         textStyle={{color:'black'}}
+                                        fullWidth
                                         buttonIcon
-                                        buttonIconName='add'
+                                        buttonIconName={item.checked ? 'checkmark' : 'add'}
                                         buttonIconSize={32}
                                         buttonIconColor='blue'
                                     />
-                                    {item.index === listCnt.todos.length && <View style={styles.lineBreak}></View>}
+                                    {item.index === listCnt.todos.length && <View style={[styles.lineBreak,{backgroundColor:Colors.lineBreak2}]}></View>}
                                 </View>
                             )}
                             keyExtractor={(todo) => todo.id}
@@ -299,7 +322,7 @@ const styles = StyleSheet.create({
     lineBreak: {
         alignSelf: 'stretch',
         height: 1,
-        backgroundColor: Colors.lineBreak2
+        backgroundColor: Colors.lineBreak
     }
 });
 

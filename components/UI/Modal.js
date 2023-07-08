@@ -14,6 +14,8 @@ const ModalUI = ({
     swipeDirection,
     onHideModal,
     height,
+    headerTitle,
+    buttonText,
     lineBreak,
     children
 }) => {
@@ -44,13 +46,13 @@ const ModalUI = ({
                         </Button>
                         <View>
                             <Text style={[styles.text, {fontWeight:'bold',color:'black'}]}>
-                                Add lists to group
+                                {headerTitle}
                             </Text>
                         </View>
                         <Button
                             onPress={onHideModal}
                         >
-                            <Text style={styles.text}>Skip</Text>
+                            <Text style={styles.text}>{buttonText}</Text>
                         </Button>
                     </View>
                     {lineBreak && <View style={styles.lineBreak}></View>}

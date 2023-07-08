@@ -6,7 +6,7 @@ const Button = ({children, onPress, fullWidth, buttonStyle}) => {
     const button = [styles.button];
 
     if (fullWidth) {
-        button.push({ width: deviceHeight*0.85 });
+        button.push({ width: deviceHeight*0.7 });
     }
 
     if (buttonStyle) {

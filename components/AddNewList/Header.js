@@ -17,7 +17,7 @@ const Header = ({value,id}) => {
                 index: listCnt.todos.length + 1
             });
         } else {
-            listCnt.dispatch({ type: 'UPDATE', text: value, id: id });
+            listCnt.dispatch({ type: 'UPDATE', payload: { text: value }, id: id });
         }
         navigation.navigate('lists');
     }
