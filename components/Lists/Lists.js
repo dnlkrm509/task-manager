@@ -56,8 +56,13 @@ const Lists = () => {
         }
     }
 
-    if(listChecked && prevUncheckedState)
-        setChecked(true);
+    useEffect(() => {
+        if(listChecked && prevUncheckedState)
+            setChecked(true);
+        else
+            setChecked(false);
+    }, [listChecked, prevUncheckedState])
+    
 
     console.log(checked)
     
@@ -69,7 +74,7 @@ const Lists = () => {
                 lineBreak
                 height={470}
                 headerTitle='Add lists to group'
-                buttonText={prevUncheckedState ? 'Add' : 'Skip'}
+                buttonText={checked ? 'Add' : 'Skip'}
                 onAdd={onAddHandler}
             >
                 {
