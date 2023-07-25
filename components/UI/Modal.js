@@ -17,6 +17,7 @@ const ModalUI = ({
     headerTitle,
     buttonText,
     lineBreak,
+    onAdd,
     children
 }) => {
     const container = [styles.container];
@@ -50,7 +51,7 @@ const ModalUI = ({
                             </Text>
                         </View>
                         <Button
-                            onPress={onHideModal}
+                            onPress={() => {onHideModal();if(buttonText==='Add'){onAdd()}}}
                         >
                             <Text style={styles.text}>{buttonText}</Text>
                         </Button>

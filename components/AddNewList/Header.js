@@ -11,13 +11,22 @@ const Header = ({value,id}) => {
     const submitHandler = () => {
         // Add New List in context
         if (!id) {
+            const newId = Math.random().toString();
             listCnt.dispatch({
                 type: 'ADD',
                 text: value !== 'Untitled list' ? value : `Untitled list (${listCnt.todos.length + 1})`,
+                id: newId,
+                index: listCnt.todos.length + 1
+            });
+            listCnt.U_Dispatch({
+                type: 'UNCHECKED_ADD',
+                text: value !== 'Untitled list' ? value : `Untitled list (${listCnt.todos.length + 1})`,
+                id: newId,
                 index: listCnt.todos.length + 1
             });
         } else {
             listCnt.dispatch({ type: 'UPDATE', payload: { text: value }, id: id });
+            listCnt.U_Dispatch({ type: 'UNCHECKED_UPDATE', payload: { text: value }, id: id });
         }
         navigation.navigate('lists');
     }
