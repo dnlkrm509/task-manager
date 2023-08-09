@@ -32,9 +32,9 @@ const Lists = () => {
     const [value, setValue] = useState({});
     const [modalIsVisible, setModalIsVisible] = useState(false);
     const [groupId, setGroupId] = useState('');
-    const [isAdded, setIsAdded] = useState(false);
     const [initialState, setInitialState] = useState(false);
     const [checked, setChecked] = useState(false);
+    const [newLists, setNewLists] = useState([]);
     
     const fName = "dANiEl";
     const lName = "kARimi";
@@ -45,7 +45,49 @@ const Lists = () => {
     const { fName: newFName, lName: newLName, fullName, fLetterName } = value;
 
     const onAddHandler = () => {
-        setIsAdded(true);
+        newLists.forEach((item, index) => {
+            if(item.checked) {
+                listCnt.Ch_Dispatch({
+                    type:'CHECKED_ADD',
+                    id: item.id,
+                    text: item.text,
+                    index: item.index
+                })
+    
+                listCnt.U_Dispatch({
+                    type:'UNCHECKED_DELETE',
+                    id: item.id
+                })
+    
+                listCnt.Ch_Dispatch({
+                    type:'CHECKED_UPDATE',
+                    id: item.id,
+                    payload: {
+                        groupId: groupId
+                    }
+                })
+            } else {
+                listCnt.U_Dispatch({
+                    type:'UNCHECKED_ADD',
+                    id: item.id,
+                    text: item.text,
+                    index: item.index
+                })
+    
+                listCnt.Ch_Dispatch({
+                    type:'CHECKED_DELETE',
+                    id: item.id
+                })
+    
+                listCnt.U_Dispatch({
+                    type:'UNCHECKED_UPDATE',
+                    id: item.id,
+                    payload: {
+                        groupId: ''
+                    }
+                })
+            }
+        })
     }
 
     let listChecked = false;
@@ -57,12 +99,34 @@ const Lists = () => {
     }
 
     useEffect(() => {
-        if(listChecked && initialState)
+        if(listChecked && !initialState)
             setChecked(true);
         else
             setChecked(false);
     }, [listChecked, initialState])
     
+    const itemsHandler = (newItem) => {
+        const updatableItemIndex = newLists.findIndex(
+            (item) => item.id === newItem.id
+        );
+
+
+        if(updatableItemIndex === -1)
+            setNewLists((prevLists) => [...prevLists, newItem])
+        else {
+            const myNewLists = [...newLists];
+            myNewLists[updatableItemIndex] = newItem;
+            if(!newItem.checked)
+                setNewLists((prevLists) => 
+                    prevLists.filter((item) => item.id !== newItem.id)
+                )
+            else
+                setNewLists(myNewLists);
+        }
+
+    }
+
+
     return (
         <View style={{flex:1,marginBottom:20}}>
             <ModalUI
@@ -82,7 +146,7 @@ const Lists = () => {
                         nestedScrollEnabled={true}
                     >
                         <FlatList 
-                            data={listCnt.todos}
+                            data={listCnt.todos.filter(o => listCnt.uncheckedTodos.some(({id,text}) => o.id === id && o.text === text))}
                             renderItem={({item}) => (
                                 <View>
                                     <View style={[styles.lineBreak,{backgroundColor:Colors.lineBreak2}]}></View>
@@ -90,11 +154,11 @@ const Lists = () => {
                                         containerStyle={[styles.detailsSearchContainer, {marginBottom:0,height:55}]}
                                         buttonStyle={[styles.nameImageContainer, styles.button]}
                                         onPress={() => {
-                                            setInitialState(true);
+                                            setInitialState(false);
                                             const selectedList = listCnt.todos.find(
                                                 (todo) => todo.id === item.id
                                             );
-                                            
+
                                             if (!selectedList.checked) {
                                                 listCnt.dispatch({
                                                     type:'UPDATE',
@@ -104,6 +168,11 @@ const Lists = () => {
                                                         checked: true
                                                     }
                                                 })
+                                                itemsHandler({
+                                                    ...item,
+                                                    checked: true,
+                                                    groupId: groupId
+                                                });
                                             } else {
                                                 listCnt.dispatch({
                                                     type:'UPDATE',
@@ -112,59 +181,25 @@ const Lists = () => {
                                                         groupId: '',
                                                         checked: false
                                                     }
-                                                })                                                
+                                                })
+                                                itemsHandler({
+                                                    ...item,
+                                                    checked: false,
+                                                    groupId: ''
+                                                });                                               
                                             }
 
 
-                                            if(!isAdded) {
-                                                if(!selectedList.checked) {
-                                                    listCnt.Ch_Dispatch({
-                                                        type:'CHECKED_ADD',
-                                                        id: item.id,
-                                                        text: item.text,
-                                                        index: item.index
-                                                    })
-        
-                                                    listCnt.U_Dispatch({
-                                                        type:'UNCHECKED_DELETE',
-                                                        id: item.id
-                                                    })
-
-                                                    listCnt.Ch_Dispatch({
-                                                        type:'CHECKED_UPDATE',
-                                                        id: item.id,
-                                                        payload: {
-                                                            groupId: groupId
-                                                        }
-                                                    })
-                                                } else {
-                                                    listCnt.U_Dispatch({
-                                                        type:'UNCHECKED_ADD',
-                                                        id: item.id,
-                                                        text: item.text,
-                                                        index: item.index
-                                                    })
-        
-                                                    listCnt.Ch_Dispatch({
-                                                        type:'CHECKED_DELETE',
-                                                        id: item.id
-                                                    })
-
-                                                    listCnt.U_Dispatch({
-                                                        type:'UNCHECKED_UPDATE',
-                                                        id: item.id,
-                                                        payload: {
-                                                            groupId: ''
-                                                        }
-                                                    })
-                                                }
-                                            }
                                         }}
                                         iconContainerStyle={[styles.image, {backgroundColor:'transparent',borderRadius:0}]}
                                         iconName='list'
                                         iconSize={28}
                                         iconColor='blue'
-                                        text={item.text ==='' ? <Text>Untitled list ({item.index})</Text> : <Text>{item.text}</Text>}
+                                        text={
+                                            item.text ==='' ?
+                                            <Text>Untitled list ({item.index})</Text> :
+                                            <Text>{item.text}</Text>
+                                        }
                                         textStyle={{color:'black'}}
                                         fullWidth
                                         buttonIcon
@@ -349,8 +384,7 @@ const Lists = () => {
                             text: "Create",
                             // create a group
                             onPress: (groupName) => {
-                                setInitialState(false);
-                                setIsAdded(false);
+                                setInitialState(true);
                                 setModalIsVisible(true);
                                 let id = Math.random().toString();
                                 setGroupId(id);
@@ -389,7 +423,7 @@ const styles = StyleSheet.create({
         paddingVertical: 1,
     },
     image: {
-        borderRadius:'50%',
+        borderRadius: 50,
         width: 30,
         height: 30,
         backgroundColor: 'gray',

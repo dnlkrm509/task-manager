@@ -51,7 +51,7 @@ const ModalUI = ({
                             </Text>
                         </View>
                         <Button
-                            onPress={() => {onHideModal();if(buttonText==='Add'){onAdd()}}}
+                            onPress={() => {if(buttonText==='Add'){onAdd();}onHideModal();}}
                         >
                             <Text style={styles.text}>{buttonText}</Text>
                         </Button>

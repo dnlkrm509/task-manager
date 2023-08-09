@@ -7,7 +7,7 @@ export const todosReducer = (state,action) => {
                     text: action.text,
                     id: action.id,
                     index: action.index,
-                    checked: false
+                    checked: action.checked
                 }
             ];
             case 'UNCHECKED_ADD':
@@ -17,7 +17,7 @@ export const todosReducer = (state,action) => {
                         text: action.text,
                         id: action.id,
                         index: action.index,
-                        checked: false
+                        checked: action.checked
                     }
                 ];
                 case 'CHECKED_ADD':

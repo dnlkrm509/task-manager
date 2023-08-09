@@ -16,13 +16,15 @@ const Header = ({value,id}) => {
                 type: 'ADD',
                 text: value !== 'Untitled list' ? value : `Untitled list (${listCnt.todos.length + 1})`,
                 id: newId,
-                index: listCnt.todos.length + 1
+                index: listCnt.todos.length + 1,
+                checked: false
             });
             listCnt.U_Dispatch({
                 type: 'UNCHECKED_ADD',
                 text: value !== 'Untitled list' ? value : `Untitled list (${listCnt.todos.length + 1})`,
                 id: newId,
-                index: listCnt.todos.length + 1
+                index: listCnt.todos.length + 1,
+                checked: false
             });
         } else {
             listCnt.dispatch({ type: 'UPDATE', payload: { text: value }, id: id });
