@@ -6,9 +6,11 @@ import {
     ScrollView,
     StyleSheet,
     useWindowDimensions,
-    Alert
+    Alert,
+    Platform
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import prompt from 'react-native-prompt-android';
 
 import { lists } from '../../data/lists';
 import ButtonIcon from '../UI/ButtonIcon';
@@ -45,7 +47,7 @@ const Lists = () => {
     const { fName: newFName, lName: newLName, fullName, fLetterName } = value;
 
     const onAddHandler = () => {
-        newLists.forEach((item, index) => {
+        newLists.forEach((item) => {
             if(item.checked) {
                 listCnt.Ch_Dispatch({
                     type:'CHECKED_ADD',
@@ -372,7 +374,39 @@ const Lists = () => {
                 buttonIconName='format-list-group'
                 buttonIconSize={32}
                 buttonIconColor='blue'
-                buttonIconOnPress={() => Alert.prompt(
+                buttonIconOnPress={Platform.OS === 'android' ?
+                prompt(
+                    'New Group',
+                    '',
+                    [
+                     {
+                        text: 'Cancel',
+                        onPress: () => console.log('Cancel Pressed'),
+                        style: 'cancel'
+                    },
+                    {
+                        text: 'Create',
+                        onPress: (groupName) => {
+                            setInitialState(true);
+                            setModalIsVisible(true);
+                            let id = Math.random().toString();
+                            setGroupId(id);
+                            groupCnx.dispatch({
+                                type:'ADD',
+                                text: groupName,
+                                index: groupCnx.groups.length,
+                                id: id
+                            })
+                        }
+                    },
+                    ],
+                    {
+                        cancelable: false,
+                        defaultValue: 'Untitled Group',
+                        placeholder: 'placeholder'
+                    }
+                ) :
+                 () => Alert.prompt(
                     "New Group",
                     null,
                     [

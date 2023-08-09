@@ -11,6 +11,7 @@ import AddNew from '../components/UI/AddNew';
 import { Colors } from '../constants/colors';
 const AddNewListScreen = ({route}) => {
     const [value, setValue] = useState('');
+    const deviceWidth = useWindowDimensions().width;
     const deviceHeight = useWindowDimensions().height;
     const listDetails = route.params?.listDetails;
 
@@ -37,7 +38,7 @@ const AddNewListScreen = ({route}) => {
             </ScrollView>
             <AddNew
                 containerStyle={[styles.detailsSearchContainer]}
-                buttonStyle={[styles.nameImageContainer, styles.button]}
+                buttonStyle={[styles.nameImageContainer, styles.button, {width:deviceWidth*95/100}]}
                 iconContainerStyle={[styles.image, {backgroundColor:'transparent',borderRadius:0}]}
                 iconName='add'
                 iconSize={28}
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     image: {
-        borderRadius:'50%',
+        borderRadius: 50,
         width: 30,
         height: 30,
         justifyContent: 'center',
