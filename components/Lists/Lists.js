@@ -10,7 +10,7 @@ import {
     Platform
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import prompt from 'react-native-prompt-android';
+import Dialog from 'react-native-dialog';
 
 import { lists } from '../../data/lists';
 import ButtonIcon from '../UI/ButtonIcon';
@@ -37,6 +37,8 @@ const Lists = () => {
     const [initialState, setInitialState] = useState(false);
     const [checked, setChecked] = useState(false);
     const [newLists, setNewLists] = useState([]);
+    const [isDialogAndroid, setIsDialogAndroid] = useState(false);
+    const [enteredValue, setEnteredValue] = useState('Untitled Group');
     
     const fName = "dANiEl";
     const lName = "kARimi";
@@ -126,6 +128,40 @@ const Lists = () => {
                 setNewLists(myNewLists);
         }
 
+    }
+
+    let AndroidDialog;
+    if(isDialogAndroid) {
+        AndroidDialog = (
+            <View style={styles.dialogContainer}>
+                <Dialog.Container visible={true}>
+                    <Dialog.Title>New Group</Dialog.Title>
+                    <Dialog.Button
+                        label='Cancel'
+                        onPress={() => setIsDialogAndroid(false)}/>
+                    <Dialog.Button
+                        label='Create'
+                        onPress={() => {
+                            setIsDialogAndroid(false);
+                            setInitialState(true);
+                            setModalIsVisible(true);
+                            let id = Math.random().toString();
+                            setGroupId(id);
+                            groupCnx.dispatch({
+                                type:'ADD',
+                                text: enteredValue,
+                                index: groupCnx.groups.length,
+                                id: id
+                            })
+                            setEnteredValue('Untitled Group');
+                        }} />
+                        <Dialog.Input
+                            onChangeText={(enteredValue) => setEnteredValue(enteredValue)}
+                            value={enteredValue}
+                        />
+                </Dialog.Container>
+            </View>
+        )
     }
 
 
@@ -374,39 +410,9 @@ const Lists = () => {
                 buttonIconName='format-list-group'
                 buttonIconSize={32}
                 buttonIconColor='blue'
-                buttonIconOnPress={Platform.OS === 'android' ?
-                prompt(
-                    'New Group',
-                    '',
-                    [
-                     {
-                        text: 'Cancel',
-                        onPress: () => console.log('Cancel Pressed'),
-                        style: 'cancel'
-                    },
-                    {
-                        text: 'Create',
-                        onPress: (groupName) => {
-                            setInitialState(true);
-                            setModalIsVisible(true);
-                            let id = Math.random().toString();
-                            setGroupId(id);
-                            groupCnx.dispatch({
-                                type:'ADD',
-                                text: groupName,
-                                index: groupCnx.groups.length,
-                                id: id
-                            })
-                        }
-                    },
-                    ],
-                    {
-                        cancelable: false,
-                        defaultValue: 'Untitled Group',
-                        placeholder: 'placeholder'
-                    }
-                ) :
-                 () => Alert.prompt(
+                buttonIconOnPress={() => {Platform.OS !== 'ios' ?
+                setIsDialogAndroid(true) :
+                Alert.prompt(
                     "New Group",
                     null,
                     [
@@ -434,13 +440,20 @@ const Lists = () => {
                     "plain-text",
                     "Untitled Group"
 
-                )}
+                )}}
             />
+            
+            {isDialogAndroid && AndroidDialog}
         </View>
     )
 };
 
 const styles = StyleSheet.create({
+    dialogContainer: {
+        backgroundColor: "red",
+        alignItems: "center",
+        justifyContent: "center",
+      },
     detailsSearchContainer: {
         height: 30,
         alignItems: 'center',
