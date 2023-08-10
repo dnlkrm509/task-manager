@@ -55,41 +55,49 @@ const Lists = () => {
                     type:'CHECKED_ADD',
                     id: item.id,
                     text: item.text,
-                    index: item.index
+                    index: item.index,
+                    groupId: item.groupId
                 })
     
                 listCnt.U_Dispatch({
                     type:'UNCHECKED_DELETE',
                     id: item.id
                 })
-    
-                listCnt.Ch_Dispatch({
-                    type:'CHECKED_UPDATE',
-                    id: item.id,
-                    payload: {
-                        groupId: groupId
-                    }
-                })
+                
+                if(item.groupId.trim().length === 0) {
+                    listCnt.Ch_Dispatch({
+                        type:'CHECKED_UPDATE',
+                        id: item.id,
+                        payload: {
+                            groupId: groupId
+                        }
+                    })
+                }
+                                
             } else {
                 listCnt.U_Dispatch({
                     type:'UNCHECKED_ADD',
                     id: item.id,
                     text: item.text,
-                    index: item.index
+                    index: item.index,
+                    groupId: item.groupId
                 })
     
                 listCnt.Ch_Dispatch({
                     type:'CHECKED_DELETE',
                     id: item.id
                 })
-    
-                listCnt.U_Dispatch({
-                    type:'UNCHECKED_UPDATE',
-                    id: item.id,
-                    payload: {
-                        groupId: ''
-                    }
-                })
+                
+                if(item.groupId.trim().length !== 0) {
+                    listCnt.U_Dispatch({
+                        type:'UNCHECKED_UPDATE',
+                        id: item.id,
+                        payload: {
+                            groupId: ''
+                        }
+                    })
+                }
+
             }
         })
     }
@@ -377,13 +385,37 @@ const Lists = () => {
                                 <AddNew
                                     containerStyle={[styles.detailsSearchContainer, {marginBottom:0,height:55,width:deviceWidth*89/100}]}
                                     buttonStyle={[styles.nameImageContainer, styles.button]}
+                                    onPress={() => {
+                                        groupCnx.dispatch({
+                                            type:'UPDATE',
+                                            id: item.id,
+                                            payload: {
+                                                isForwardChevron: !item.isForwardChevron
+                                            }
+                                        })
+                                    }}
                                     iconContainerStyle={[styles.image, {backgroundColor:'transparent',borderRadius:0}]}
                                     iconType='material-community'
                                     iconName='format-list-group'
                                     iconSize={28}
                                     iconColor='blue'
-                                    text={item.text ==='Untitled Group' ? item.index < 1 ? <Text>Untitled Group</Text> : <Text>Untitled Group {item.index}</Text> : <Text>{item.text}</Text>}
+                                    text={
+                                            item.text === 'Untitled Group' ?
+                                                item.index < 1 ?
+                                                    <Text>Untitled Group</Text>
+                                                    :
+                                                    <Text>Untitled Group {item.index}</Text>
+                                                :
+                                            <Text>{item.text}</Text>
+                                    }
                                     textStyle={{color:'black',fontWeight:'bold'}}
+                                    buttonIcon
+                                    buttonIconType='ionicon'
+                                    buttonIconName={item.isForwardChevron ? 'chevron-forward' : 'chevron-down'}
+                                    buttonIconSize={28}
+                                    buttonIconColor={Colors.GroupChevron}
+                                    showSublists={!item.isForwardChevron}
+                                    sublists={listCnt.checkedTodos.filter((todo) => todo.groupId === item.id)}
                                 />
                             )}
                             keyExtractor={(todo) => todo.id}
@@ -432,7 +464,8 @@ const Lists = () => {
                                     type:'ADD',
                                     text: groupName,
                                     index: groupCnx.groups.length,
-                                    id: id
+                                    id: id,
+                                    isForwardChevron: true
                                 })
                             }
                         }

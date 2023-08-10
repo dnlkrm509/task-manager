@@ -22,10 +22,17 @@ const AddNew = ({
     buttonIconName,
     buttonIconSize,
     buttonIconColor,
-    buttonIconOnPress
+    buttonIconOnPress,
+    showSublists,
+    sublists
 }) => {
+    let newSublists = [];
+    if(sublists)
+        newSublists = sublists.reduce((c, n) =>
+        c.find(el => el.id === n.id) ? c : [...c, n], []);
     return (
-        <View style={containerStyle}>
+        <View>
+            <View style={containerStyle}>
                 <Button
                     buttonStyle={buttonStyle}
                     onPress={onPress}
@@ -49,6 +56,8 @@ const AddNew = ({
                     />
                 )}
             </View>
+            {showSublists && console.log(newSublists)}
+        </View>
     )
 };
 

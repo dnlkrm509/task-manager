@@ -7,7 +7,8 @@ export const todosReducer = (state,action) => {
                     text: action.text,
                     id: action.id,
                     index: action.index,
-                    checked: action.checked
+                    checked: action.checked,
+                    groupId: action.groupId
                 }
             ];
             case 'UNCHECKED_ADD':
@@ -17,7 +18,8 @@ export const todosReducer = (state,action) => {
                         text: action.text,
                         id: action.id,
                         index: action.index,
-                        checked: action.checked
+                        checked: action.checked,
+                        groupId: action.groupId
                     }
                 ];
                 case 'CHECKED_ADD':
@@ -27,7 +29,8 @@ export const todosReducer = (state,action) => {
                             text: action.text,
                             id: action.id,
                             index: action.index,
-                            checked: true
+                            checked: true,
+                            groupId: action.groupId
                         }
                     ];
         case 'DELETE':
