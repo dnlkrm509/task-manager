@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, useWindowDimensions, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Icon } from '@rneui/themed';
 
@@ -23,6 +23,7 @@ const AddNew = ({
     buttonIconSize,
     buttonIconColor,
     buttonIconOnPress,
+    group,
     showSublists,
     sublists
 }) => {
@@ -56,7 +57,23 @@ const AddNew = ({
                     />
                 )}
             </View>
-            {showSublists && console.log(newSublists)}
+            {console.log(typeof(showSublists))}
+            {group ?
+                showSublists ?
+                    newSublists.length > 0 ?
+                        (
+                            <FlatList
+                                data={newSublists}
+                                renderItem={({item}) => (<Text>{item.text}</Text>)}
+                            />
+                        )
+                    :
+                            <Text>Tap or Drag Here to Add Lists</Text>
+                :
+                console.log('Sublists are hidden')
+            :
+                console.log('This item is not a group')
+            }
         </View>
     )
 };

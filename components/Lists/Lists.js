@@ -414,6 +414,7 @@ const Lists = () => {
                                     buttonIconName={item.isForwardChevron ? 'chevron-forward' : 'chevron-down'}
                                     buttonIconSize={28}
                                     buttonIconColor={Colors.GroupChevron}
+                                    group
                                     showSublists={!item.isForwardChevron}
                                     sublists={listCnt.checkedTodos.filter((todo) => todo.groupId === item.id)}
                                 />
