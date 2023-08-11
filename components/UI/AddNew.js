@@ -5,6 +5,8 @@ import { Icon } from '@rneui/themed';
 
 import Button from "./Button";
 import ButtonIcon from "./ButtonIcon";
+import { useNavigation } from "@react-navigation/native";
+import { Colors } from "../../constants/colors";
 
 const AddNew = ({
     containerStyle,
@@ -25,12 +27,18 @@ const AddNew = ({
     buttonIconOnPress,
     group,
     showSublists,
-    sublists
+    sublists,
+    ID,
+    onSelectGroupLists
 }) => {
     let newSublists = [];
     if(sublists)
         newSublists = sublists.reduce((c, n) =>
         c.find(el => el.id === n.id) ? c : [...c, n], []);
+
+    const navigation = useNavigation();
+    const deviceWidth = useWindowDimensions().width;
+
     return (
         <View>
             <View style={containerStyle}>
@@ -64,11 +72,36 @@ const AddNew = ({
                         (
                             <FlatList
                                 data={newSublists}
-                                renderItem={({item}) => (<Text>{item.text}</Text>)}
+                                renderItem={({item}) => (
+                                    <View style={containerStyle}>
+                                        <Button
+                                            buttonStyle={[buttonStyle,styles.groupButton, {justifyContent:'flex-start',paddingLeft:10}]}
+                                            onPress={() => {navigation.navigate('addnew',{listDetails:item})}}
+                                            fullWidth
+                                        >
+                                            <View style={iconContainerStyle}>
+                                                <Ionicons name='list' size={28} color='blue' />
+                                            </View>
+                                            <Text style={[styles.textStyle, textStyle, { fontWeight: 'normal' }]}>
+                                                {item.text}
+                                            </Text>
+                                        </Button>
+                                    </View>
+                                )}
                             />
                         )
                     :
-                            <Text>Tap or Drag Here to Add Lists</Text>
+                        <View style={containerStyle}>
+                            <Button
+                                buttonStyle={[buttonStyle,styles.groupButton,{width: deviceWidth*80/100}]}
+                                onPress={() => {onSelectGroupLists(ID)}}
+                                fullWidth
+                            >
+                                <Text style={[styles.textStyle, textStyle, { fontWeight: 'normal',color:Colors.groupText }]}>
+                                    Tap or Drag Here to Add Lists
+                                </Text>
+                            </Button>
+                        </View>
                 :
                 console.log('Sublists are hidden')
             :
@@ -82,6 +115,14 @@ const styles = StyleSheet.create({
     textStyle: {
         color: 'blue',
         fontSize: 17
+    },
+    groupButton: {
+        justifyContent: 'center',
+        height: 55,
+        borderRadius: 0,
+        borderLeftWidth: 2,
+        borderLeftColor: Colors.lineBreak,
+        marginLeft: 20
     }
 });
 

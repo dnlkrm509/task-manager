@@ -48,6 +48,12 @@ const Lists = () => {
     
     const { fName: newFName, lName: newLName, fullName, fLetterName } = value;
 
+    const onSelectGroupLists = (id) => {
+        setInitialState(true);
+        setModalIsVisible(true);
+        setGroupId(id);
+    } 
+
     const onAddHandler = () => {
         newLists.forEach((item) => {
             if(item.checked) {
@@ -417,6 +423,8 @@ const Lists = () => {
                                     group
                                     showSublists={!item.isForwardChevron}
                                     sublists={listCnt.checkedTodos.filter((todo) => todo.groupId === item.id)}
+                                    ID={item.id}
+                                    onSelectGroupLists={onSelectGroupLists}
                                 />
                             )}
                             keyExtractor={(todo) => todo.id}

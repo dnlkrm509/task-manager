@@ -3,5 +3,6 @@ export const Colors = {
     purplish: '#6677cc',
     purplishLighter: '#5d6bb0',
     lineBreak2: '#f5f5f5',
-    GroupChevron: '#BBBBBB'
+    GroupChevron: '#BBBBBB',
+    groupText: '#696969'
 };
