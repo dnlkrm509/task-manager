@@ -18,6 +18,8 @@ const ModalUI = ({
     buttonText,
     lineBreak,
     onAdd,
+    onCancel,
+    onSkip,
     children
 }) => {
     const container = [styles.container];
@@ -41,7 +43,7 @@ const ModalUI = ({
                 <View style={container}>
                     <View style={styles.header}>
                         <Button
-                            onPress={onHideModal}
+                            onPress={() => {onCancel();onHideModal()}}
                         >
                             <Text style={styles.text}>Cancel</Text>
                         </Button>
@@ -51,7 +53,7 @@ const ModalUI = ({
                             </Text>
                         </View>
                         <Button
-                            onPress={() => {if(buttonText==='Add'){onAdd();}onHideModal();}}
+                            onPress={() => {if(buttonText==='Add'){onAdd();}if(buttonText==='Skip'){onSkip();}onHideModal();}}
                         >
                             <Text style={styles.text}>{buttonText}</Text>
                         </Button>

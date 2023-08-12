@@ -76,7 +76,7 @@ const AddNew = ({
                                     <View style={containerStyle}>
                                         <Button
                                             buttonStyle={[buttonStyle,styles.groupButton, {justifyContent:'flex-start',paddingLeft:10}]}
-                                            onPress={() => {navigation.navigate('addnew',{listDetails:item})}}
+                                            onPress={() => {navigation.navigate('addnew',{listDetails:item,isExist:true})}}
                                             fullWidth
                                         >
                                             <View style={iconContainerStyle}>

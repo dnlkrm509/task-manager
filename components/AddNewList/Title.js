@@ -8,7 +8,7 @@ import {
 import { ListContext } from '../../contexts/list-context';
 import { Colors } from '../../constants/colors';
 
-const Title = ({onSetValue,id}) => {
+const Title = ({onSetValue,id,isExist}) => {
     const [isFocused, setIsFocused] = useState(false);
     const listCnx = useContext(ListContext);
     const storedValue = listCnx.todos.find(
@@ -42,7 +42,7 @@ const Title = ({onSetValue,id}) => {
     return (
         <View style={[styles.container, {width:deviceWidth*0.90}]}>
             <TextInput
-                autoFocus
+                autoFocus={!isExist}
                 onFocus={focusHandler}
                 onBlur={blurHandler}
                 selectionColor='white'

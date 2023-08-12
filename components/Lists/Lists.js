@@ -52,7 +52,26 @@ const Lists = () => {
         setInitialState(true);
         setModalIsVisible(true);
         setGroupId(id);
-    } 
+    }
+
+    const onCancelHandler = () => {
+        newLists.forEach((item) => {
+            if(item.checked) {
+                listCnt.dispatch({
+                    type:'UPDATE',
+                    id: item.id,
+                    payload: {
+                        groupId: '',
+                        checked: false
+                    }
+                })
+            }
+        })
+    }
+
+    const onSkipHandler = () => {
+        setNewLists([]);
+    }
 
     const onAddHandler = () => {
         newLists.forEach((item) => {
@@ -106,6 +125,8 @@ const Lists = () => {
 
             }
         })
+
+        setNewLists([]);
     }
 
     let listChecked = false;
@@ -189,6 +210,8 @@ const Lists = () => {
                 headerTitle='Add lists to group'
                 buttonText={checked ? 'Add' : 'Skip'}
                 onAdd={onAddHandler}
+                onCancel={onCancelHandler}
+                onSkip={onSkipHandler}
             >
                 {
                 listCnt.todos.length ? (
@@ -356,7 +379,7 @@ const Lists = () => {
                                 <AddNew
                                     containerStyle={[styles.detailsSearchContainer, {marginBottom:0,height:55,width:deviceWidth*89/100}]}
                                     buttonStyle={[styles.nameImageContainer, styles.button]}
-                                    onPress={() => navigation.navigate('addnew',{listDetails:item})}
+                                    onPress={() => navigation.navigate('addnew',{listDetails:item,isExist:true})}
                                     iconContainerStyle={[styles.image, {backgroundColor:'transparent',borderRadius:0}]}
                                     iconName='list'
                                     iconSize={28}

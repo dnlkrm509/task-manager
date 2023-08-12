@@ -14,6 +14,7 @@ const AddNewListScreen = ({route}) => {
     const deviceWidth = useWindowDimensions().width;
     const deviceHeight = useWindowDimensions().height;
     const listDetails = route.params?.listDetails;
+    const isExist = route.params? route.params.isExist : false;
 
     return (
         <View style={styles.container}>
@@ -30,6 +31,7 @@ const AddNewListScreen = ({route}) => {
                     <Title
                         onSetValue={(enteredValue) => setValue(enteredValue)}
                         id={route.params ? listDetails.id : null}
+                        isExist={route.params ? isExist : false}
                     />
                 </ScrollView>
                 <View style={{marginTop:deviceHeight/2-30}}>
