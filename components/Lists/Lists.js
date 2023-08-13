@@ -7,10 +7,15 @@ import {
     StyleSheet,
     useWindowDimensions,
     Alert,
-    Platform
+    Platform,
+    Animated,
+    TouchableOpacity,
+    StatusBar
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Dialog from 'react-native-dialog';
+import { SwipeListView } from 'react-native-swipe-list-view';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { lists } from '../../data/lists';
 import ButtonIcon from '../UI/ButtonIcon';
@@ -39,6 +44,7 @@ const Lists = () => {
     const [newLists, setNewLists] = useState([]);
     const [isDialogAndroid, setIsDialogAndroid] = useState(false);
     const [enteredValue, setEnteredValue] = useState('Untitled Group');
+    const [rowSwipeAnimatedValues] = useState(new Animated.Value(0));
     
     const fName = "dANiEl";
     const lName = "kARimi";
@@ -196,6 +202,124 @@ const Lists = () => {
                         />
                 </Dialog.Container>
             </View>
+        )
+    }
+
+    useEffect(() => {
+        Animated.parallel([
+            Animated.timing(
+                rowSwipeAnimatedValues,
+                {
+                  toValue: 1,
+                  duration: 10000,
+                  useNativeDriver: true
+                }
+              ),
+              Animated.spring(
+                rowSwipeAnimatedValues,
+                {
+                    toValue: 1,
+                    useNativeDriver: true
+                }
+            )
+        ]).start();
+    }, [rowSwipeAnimatedValues])
+
+    const interpolatedValue = rowSwipeAnimatedValues.interpolate({
+        inputRange: [0, 128],
+        outputRange: [0, 1],
+        extrapolate: 'clamp'
+    })
+
+    const onSwipeValueChange = swipeData => {
+        const { key, value } = swipeData;
+        rowSwipeAnimatedValues.setValue(Math.abs(value));
+    };
+
+    const closeRow = (rowMap, rowKey) => {
+        if(rowMap[rowKey]) {
+            rowMap[rowKey].closeRow();
+        }
+    }
+
+    const deleteRow = (rowMap, rowKey) => {
+        closeRow(rowMap, rowKey);
+        listCnt.dispatch({
+            type:'DELETE',
+            id: rowKey
+        })
+        listCnt.U_Dispatch({
+            type:'UNCHECKED_DELETE',
+            id: rowKey
+        })
+    }
+
+    const onLeftAction = () => {}
+
+    const onRightAction = () => {}
+
+    const HiddenItemWithActions = props => {
+        const {
+            leftActionActivated,
+            rightActionActivated,
+            rowActionAnimatedValue,
+            rowHeightAnimatedValue,
+            onDelete
+        } = props;
+
+        if(rightActionActivated) {
+            Animated.spring(rowActionAnimatedValue, {
+                toValue: 500
+            }).start();
+        }
+
+        return (
+            <Animated.View style={[
+                    styles.rowBack,
+                    {
+                        opacity: interpolatedValue,
+                    }
+                ]}>
+                <TouchableOpacity
+                    style={[styles.backRightBtn, styles.backRightBtnRight]}
+                    onPress={onDelete}
+                >
+                    <Animated.View
+                        style={[
+                            styles.trash,
+                            {
+                                transform: [
+                                    {
+                                        scale: interpolatedValue
+                                    },
+                                ],
+                            },
+                        ]}
+                    >
+                        <MaterialCommunityIcons
+                            name='trash-can-outline'
+                            color='#fff'
+                            size={20}
+                        />
+                    </Animated.View>
+                </TouchableOpacity>
+            </Animated.View>
+        )
+    }
+
+    const renderHiddenItem = (data,rowMap) => {
+        const rowActionAnimatedValue = new Animated.Value(75);
+        const rowHeightAnimatedValue = new Animated.Value(60);
+
+        return (
+            <HiddenItemWithActions
+                data={data}
+                rowMap={rowMap}
+                rowKey={data.item.id}
+                onDelete={() => deleteRow(rowMap, data.item.id)}
+                rowActionAnimatedValue={rowActionAnimatedValue}
+                rowHeightAnimatedValue={rowHeightAnimatedValue}
+            />
         )
     }
 
@@ -373,11 +497,11 @@ const Lists = () => {
                         scrollEnabled={false}
                         nestedScrollEnabled={true}
                     >
-                        <FlatList 
+                        <SwipeListView 
                             data={listCnt.uncheckedTodos}
                             renderItem={({item}) => (
                                 <AddNew
-                                    containerStyle={[styles.detailsSearchContainer, {marginBottom:0,height:55,width:deviceWidth*89/100}]}
+                                    containerStyle={[styles.detailsSearchContainer, {marginBottom:0,height:55,width:deviceWidth,backgroundColor:Colors.listBackgroundColor}]}
                                     buttonStyle={[styles.nameImageContainer, styles.button]}
                                     onPress={() => navigation.navigate('addnew',{listDetails:item,isExist:true})}
                                     iconContainerStyle={[styles.image, {backgroundColor:'transparent',borderRadius:0}]}
@@ -391,9 +515,22 @@ const Lists = () => {
                                     textStyle={{color:'black'}}
                                 />
                             )}
+                            renderHiddenItem={renderHiddenItem}
                             keyExtractor={(todo) => todo.id}
                             showsVerticalScrollIndicator={false}
                             alwaysBounceVertical={false}
+                            rightOpenValue={-128}
+                            disableRightSwipe
+                            onSwipeValueChange={onSwipeValueChange}
+                            previewRowKey={'0'}
+                            previewOpenValue={-40}
+                            previewOpenDelay={3000}
+                            leftActivationValue={100}
+                            rightActivationValue={-200}
+                            leftActionValue={0}
+                            rightActionValue={-500}
+                            onLeftAction={onLeftAction}
+                            onRightAction={onRightAction}
                         />
                     </ScrollView>
                 ) : (
@@ -518,7 +655,7 @@ const styles = StyleSheet.create({
         backgroundColor: "red",
         alignItems: "center",
         justifyContent: "center",
-      },
+    },
     detailsSearchContainer: {
         height: 30,
         alignItems: 'center',
@@ -551,7 +688,36 @@ const styles = StyleSheet.create({
         alignSelf: 'stretch',
         height: 1,
         backgroundColor: Colors.lineBreak
-    }
+    },
+      rowBack: {
+        alignItems: 'center',
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignSelf: 'stretch',
+        paddingLeft: 15,
+        margin: 5,
+        marginBottom: 15,
+        borderRadius: 5,
+      },
+      backRightBtn: {
+        alignItems: 'flex-end',
+        bottom: 0,
+        justifyContent: 'center',
+        position: 'absolute',
+        top: 0,
+        width: '100%',
+        paddingRight: 17,
+      },
+      backRightBtnRight: {
+        backgroundColor: 'red',
+        right: 45,
+      },
+      trash: {
+        height: 25,
+        width: 25,
+        marginRight: 7,
+      },
 });
 
 export default Lists;

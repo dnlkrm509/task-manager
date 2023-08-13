@@ -4,5 +4,6 @@ export const Colors = {
     purplishLighter: '#5d6bb0',
     lineBreak2: '#f5f5f5',
     GroupChevron: '#BBBBBB',
-    groupText: '#696969'
+    groupText: '#696969',
+    listBackgroundColor: '#f2f2f2'
 };
