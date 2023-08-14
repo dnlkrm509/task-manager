@@ -9,12 +9,11 @@ import {
     Alert,
     Platform,
     Animated,
-    TouchableOpacity,
-    StatusBar
+    TouchableOpacity
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Dialog from 'react-native-dialog';
-import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
+import { SwipeListView } from 'react-native-swipe-list-view';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { lists } from '../../data/lists';
