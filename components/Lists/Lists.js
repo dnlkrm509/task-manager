@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Dialog from 'react-native-dialog';
-import { SwipeListView } from 'react-native-swipe-list-view';
+import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { lists } from '../../data/lists';
@@ -45,6 +45,7 @@ const Lists = () => {
     const [isDialogAndroid, setIsDialogAndroid] = useState(false);
     const [enteredValue, setEnteredValue] = useState('Untitled Group');
     const [rowSwipeAnimatedValues] = useState(new Animated.Value(0));
+    const [trashIsRight, setTrashIsRight] = useState(true);
     
     const fName = "dANiEl";
     const lName = "kARimi";
@@ -256,32 +257,47 @@ const Lists = () => {
 
     const onLeftAction = () => {}
 
-    const onRightAction = () => {}
+    const onRightAction = (rowKey) => {
+        setTrashIsRight((prevState) => !prevState)
+        listCnt.dispatch({
+            type:'DELETE',
+            id: rowKey
+        })
+        listCnt.U_Dispatch({
+            type:'UNCHECKED_DELETE',
+            id: rowKey
+        })
+    }
 
     const HiddenItemWithActions = props => {
         const {
             leftActionActivated,
             rightActionActivated,
             rowActionAnimatedValue,
-            rowHeightAnimatedValue,
             onDelete
         } = props;
 
+
         if(rightActionActivated) {
             Animated.spring(rowActionAnimatedValue, {
-                toValue: 500
+                toValue: 500,
+                useNativeDriver: true
             }).start();
+        }
+
+        const backRightBtn = [styles.backRightBtn, styles.backRightBtnRight];
+        if(trashIsRight) {
+            backRightBtn.push({ alignItems:'flex-end', right: 45 })
+        } else {
+            backRightBtn.push({ alignItems:'flex-start', left: 0 })
         }
 
         return (
             <Animated.View style={[
-                    styles.rowBack,
-                    {
-                        opacity: interpolatedValue,
-                    }
+                    styles.rowBack
                 ]}>
                 <TouchableOpacity
-                    style={[styles.backRightBtn, styles.backRightBtnRight]}
+                    style={[backRightBtn]}
                     onPress={onDelete}
                 >
                     <Animated.View
@@ -315,7 +331,6 @@ const Lists = () => {
             <HiddenItemWithActions
                 data={data}
                 rowMap={rowMap}
-                rowKey={data.item.id}
                 onDelete={() => deleteRow(rowMap, data.item.id)}
                 rowActionAnimatedValue={rowActionAnimatedValue}
                 rowHeightAnimatedValue={rowHeightAnimatedValue}
@@ -499,21 +514,21 @@ const Lists = () => {
                     >
                         <SwipeListView 
                             data={listCnt.uncheckedTodos}
-                            renderItem={({item}) => (
-                                <AddNew
-                                    containerStyle={[styles.detailsSearchContainer, {marginBottom:0,height:55,width:deviceWidth,backgroundColor:Colors.listBackgroundColor}]}
-                                    buttonStyle={[styles.nameImageContainer, styles.button]}
-                                    onPress={() => navigation.navigate('addnew',{listDetails:item,isExist:true})}
-                                    iconContainerStyle={[styles.image, {backgroundColor:'transparent',borderRadius:0}]}
-                                    iconName='list'
-                                    iconSize={28}
-                                    iconColor='blue'
-                                    text={item.text ==='' ? 
-                                            <Text>Untitled list ({item.index})</Text> :
-                                            <Text>{item.text}</Text>
-                                    }
-                                    textStyle={{color:'black'}}
-                                />
+                            renderItem={ ( rowData, rowMap ) => (
+                                    <AddNew
+                                        containerStyle={[styles.detailsSearchContainer, {marginBottom:0,height:55,width:deviceWidth,backgroundColor:Colors.listBackgroundColor}]}
+                                        buttonStyle={[styles.nameImageContainer, styles.button]}
+                                        onPress={() => navigation.navigate('addnew',{listDetails:item,isExist:true})}
+                                        iconContainerStyle={[styles.image, {backgroundColor:'transparent',borderRadius:0}]}
+                                        iconName='list'
+                                        iconSize={28}
+                                        iconColor='blue'
+                                        text={rowData.item.text ==='' ? 
+                                                <Text>Untitled list ({rowData.item.index})</Text> :
+                                                <Text>{rowData.item.text}</Text>
+                                        }
+                                        textStyle={{color:'black'}}
+                                    />
                             )}
                             renderHiddenItem={renderHiddenItem}
                             keyExtractor={(todo) => todo.id}
@@ -525,12 +540,11 @@ const Lists = () => {
                             previewRowKey={'0'}
                             previewOpenValue={-40}
                             previewOpenDelay={3000}
-                            leftActivationValue={100}
                             rightActivationValue={-200}
-                            leftActionValue={0}
                             rightActionValue={-500}
-                            onLeftAction={onLeftAction}
+                            onRightActionStatusChange={() => {setTrashIsRight((prevState) => !prevState)}}
                             onRightAction={onRightAction}
+                            closeOnRowBeginSwipe
                         />
                     </ScrollView>
                 ) : (
@@ -701,7 +715,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
       },
       backRightBtn: {
-        alignItems: 'flex-end',
         bottom: 0,
         justifyContent: 'center',
         position: 'absolute',
@@ -710,8 +723,7 @@ const styles = StyleSheet.create({
         paddingRight: 17,
       },
       backRightBtnRight: {
-        backgroundColor: 'red',
-        right: 45,
+        backgroundColor: 'red'
       },
       trash: {
         height: 25,
