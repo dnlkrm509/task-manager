@@ -5,5 +5,6 @@ export const Colors = {
     lineBreak2: '#f5f5f5',
     GroupChevron: '#BBBBBB',
     groupText: '#696969',
-    listBackgroundColor: '#f2f2f2'
+    listBackgroundColor: '#f2f2f2',
+    modalLittleLine: '#999999'
 };

@@ -17,6 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Colors } from "../../constants/colors";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { ListContext } from "../../contexts/list-context";
+import ModalUI from "./Modal";
 
 const AddNew = ({
     containerStyle,
@@ -38,10 +39,19 @@ const AddNew = ({
     group,
     showSublists,
     sublists,
+    secondButtonIconType,
+    secondButtonIconName,
+    secondButtonIconSize,
+    secondButtonIconColor,
+    secondButtonIconOnPress,
     ID,
     onSelectGroupLists
 }) => {
+    const [rowId, setRowId] = useState('');
     const [rowSwipeAnimatedValues] = useState(new Animated.Value(0));
+    const [modalDeleteConfirmarionIsVisible, setModalDeleteConfirmationIsVisible] = useState(false);
+    const [modalDeleteConfirmed, setModalDeleteConfirmed] = useState(false);
+    const [modalDeleteCancelled, setModalDeleteCancelled] = useState(false);
     const [trashIsRight, setTrashIsRight] = useState(true);
 
     const listCnt = useContext(ListContext);
@@ -93,35 +103,39 @@ const AddNew = ({
 
     const deleteRow = (rowMap, rowKey) => {
         closeRow(rowMap, rowKey);
-        listCnt.dispatch({
-            type:'DELETE',
-            id: rowKey
-        })
-        listCnt.Ch_Dispatch({
-            type:'CHECKED_DELETE',
-            id: rowKey
-        })
+        setRowId(rowKey);
+        setModalDeleteConfirmationIsVisible(true);
     }
-
-    const onLeftAction = () => {}
 
     const onRightAction = (rowKey) => {
-        setTrashIsRight((prevState) => !prevState)
-        listCnt.dispatch({
-            type:'DELETE',
-            id: rowKey
-        })
-        listCnt.Ch_Dispatch({
-            type:'CHECKED_DELETE',
-            id: rowKey
-        })
+        setRowId(rowKey);
+        setTrashIsRight(false);
+        setModalDeleteConfirmationIsVisible(true);
     }
+
+    useEffect(() => {
+        if(modalDeleteConfirmed) {
+            listCnt.dispatch({
+                type:'DELETE',
+                id: rowId
+            })
+            listCnt.Ch_Dispatch({
+                type:'CHECKED_DELETE',
+                id: rowId
+            })
+            setModalDeleteConfirmed(false);
+            setModalDeleteConfirmationIsVisible(false);
+            setTrashIsRight(true);
+        }
+    }, [modalDeleteConfirmed, rowId, listCnt])
 
     const HiddenItemWithActions = props => {
         const {
             leftActionActivated,
             rightActionActivated,
             rowActionAnimatedValue,
+            data,
+            rowMap,
             onDelete
         } = props;
 
@@ -131,6 +145,10 @@ const AddNew = ({
                 toValue: 500,
                 useNativeDriver: true
             }).start();
+        }
+
+        if(modalDeleteCancelled) {
+            closeRow(rowMap,data.item.id);
         }
 
         const backRightBtn = [styles.backRightBtn, styles.backRightBtnRight];
@@ -202,6 +220,15 @@ const AddNew = ({
                         {text}
                     </Text>
                 </Button>
+                {group && showSublists && (
+                    <ButtonIcon
+                        type={secondButtonIconType}
+                        name={secondButtonIconName}
+                        size={secondButtonIconSize}
+                        color={secondButtonIconColor}
+                        onPress={secondButtonIconOnPress}
+                    />
+                )}
                 {buttonIcon && (
                     <ButtonIcon
                         type={buttonIconType}
@@ -216,40 +243,63 @@ const AddNew = ({
                 showSublists ?
                     newSublists.length > 0 ?
                         (
-                            <SwipeListView
-                                data={newSublists}
-                                renderItem={({item}) => (
-                                    <View style={[containerStyle,{backgroundColor:Colors.listBackgroundColor}]}>
-                                        <Button
-                                            buttonStyle={[buttonStyle,styles.groupButton, {justifyContent:'flex-start',paddingLeft:10}]}
-                                            onPress={() => {navigation.navigate('addnew',{listDetails:item,isExist:true})}}
-                                            fullWidth
-                                        >
-                                            <View style={iconContainerStyle}>
-                                                <Ionicons name='list' size={28} color='blue' />
-                                            </View>
-                                            <Text style={[styles.textStyle, textStyle, { fontWeight: 'normal' }]}>
-                                                {item.text}
-                                            </Text>
-                                        </Button>
-                                    </View>
-                                )}
-                                renderHiddenItem={renderHiddenItem}
-                                keyExtractor={(todo) => todo.id}
-                                showsVerticalScrollIndicator={false}
-                                alwaysBounceVertical={false}
-                                rightOpenValue={-128}
-                                disableRightSwipe
-                                onSwipeValueChange={onSwipeValueChange}
-                                previewRowKey={'0'}
-                                previewOpenValue={-40}
-                                previewOpenDelay={3000}
-                                rightActivationValue={-200}
-                                rightActionValue={-500}
-                                onRightActionStatusChange={() => {setTrashIsRight((prevState) => !prevState)}}
-                                onRightAction={onRightAction}
-                                closeOnRowBeginSwipe
-                            />
+                            <View>
+                                <ModalUI
+                                    modalVisible={modalDeleteConfirmarionIsVisible}
+                                    onHideModal={() => {
+                                        setModalDeleteCancelled(true);
+                                        setModalDeleteConfirmationIsVisible(false);
+                                    }}
+                                    height={170}
+                                    position='bottomDeleteConfirmation'
+                                    headerTitle={`"list Name" will be permanently deleted.`}
+                                    onBackdropPress={() => {
+                                        setModalDeleteCancelled(true);
+                                        setModalDeleteConfirmationIsVisible(false);
+                                        setTrashIsRight(true);
+                                    }}
+                                >
+                                    <Button onPress={() => {
+                                        setModalDeleteConfirmed(true)
+                                        setTrashIsRight(true);
+                                    }}><Text>Delete</Text></Button>
+
+                                </ModalUI>
+                                <SwipeListView
+                                    data={newSublists}
+                                    renderItem={({item}) => (
+                                        <View style={[containerStyle,{backgroundColor:Colors.listBackgroundColor}]}>
+                                            <Button
+                                                buttonStyle={[buttonStyle,styles.groupButton, {justifyContent:'flex-start',paddingLeft:10}]}
+                                                onPress={() => {navigation.navigate('addnew',{listDetails:item,isExist:true})}}
+                                                fullWidth
+                                            >
+                                                <View style={iconContainerStyle}>
+                                                    <Ionicons name='list' size={28} color='blue' />
+                                                </View>
+                                                <Text style={[styles.textStyle, textStyle, { fontWeight: 'normal' }]}>
+                                                    {item.text}
+                                                </Text>
+                                            </Button>
+                                        </View>
+                                    )}
+                                    renderHiddenItem={renderHiddenItem}
+                                    keyExtractor={(todo) => todo.id}
+                                    showsVerticalScrollIndicator={false}
+                                    alwaysBounceVertical={false}
+                                    rightOpenValue={-128}
+                                    disableRightSwipe
+                                    onSwipeValueChange={onSwipeValueChange}
+                                    previewRowKey={'0'}
+                                    previewOpenValue={-40}
+                                    previewOpenDelay={3000}
+                                    rightActivationValue={-200}
+                                    rightActionValue={-500}
+                                    onRightActionStatusChange={() => {setTrashIsRight((prevState) => !prevState)}}
+                                    onRightAction={onRightAction}
+                                    closeOnRowBeginSwipe
+                                />
+                            </View>
                         )
                     :
                         <View style={containerStyle}>
@@ -264,9 +314,11 @@ const AddNew = ({
                             </Button>
                         </View>
                 :
-                console.log('Sublists are hidden')
+                    // Sublists are hidden
+                    console.log('')
             :
-                console.log('This item is not a group')
+                // This item is not a group
+                console.log('')
             }
         </View>
     )

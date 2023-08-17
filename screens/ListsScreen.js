@@ -1,12 +1,12 @@
 import React from 'react';
 import { View } from 'react-native';
 
-import Lists from '../components/Lists/Lists';
+import Home from '../components/Home/Home';
 
 const ListsScreen = () => {
     return (
         <View style={{flex:1}}>
-            <Lists />
+            <Home />
         </View>
     )
 };
