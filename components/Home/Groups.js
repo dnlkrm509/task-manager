@@ -12,7 +12,6 @@ const Groups = ({
     modalIsVisible,
     groupId,
     onSetGroupId,
-    onSetGroupName,
     onSetModalIsVisible,
     onSetInitialState
 }) => {
@@ -250,7 +249,43 @@ const Groups = ({
                 swipeDirection='down'
                 onSwipeComplete={() => setModalEditGroupIsVisible(false)}
             >
-
+                <AddNew
+                    containerStyle={[styles.detailsSearchContainer, {marginBottom:0,height:55}]}
+                    buttonStyle={[styles.nameImageContainer, styles.button]}
+                    onPress={() => {}}
+                    iconContainerStyle={[styles.image, {backgroundColor:'transparent',borderRadius:0}]}
+                    iconName='list'
+                    iconSize={28}
+                    iconColor='black'
+                    text={<Text>Add/Remove Lists</Text>}
+                    textStyle={{color:'black'}}
+                    fullWidth
+                />
+                <AddNew
+                    containerStyle={[styles.detailsSearchContainer, {marginBottom:0,height:55}]}
+                    buttonStyle={[styles.nameImageContainer, styles.button]}
+                    onPress={() => {}}
+                    iconContainerStyle={[styles.image, {backgroundColor:'transparent',borderRadius:0}]}
+                    iconType='material-community'
+                    iconName='format-list-group'
+                    iconSize={28}
+                    iconColor='black'
+                    text={<Text>Rename Group</Text>}
+                    textStyle={{color:'black'}}
+                    fullWidth
+                />
+                <AddNew
+                    containerStyle={[styles.detailsSearchContainer, {marginBottom:0,height:55}]}
+                    buttonStyle={[styles.nameImageContainer, styles.button]}
+                    onPress={() => {}}
+                    iconContainerStyle={[styles.image, {backgroundColor:'transparent',borderRadius:0}]}
+                    iconName='trash-outline'
+                    iconSize={20}
+                    iconColor='red'
+                    text={<Text>Delete Group</Text>}
+                    textStyle={{color:'red'}}
+                    fullWidth
+                />
             </ModalUI>
 
 
@@ -279,17 +314,9 @@ const Groups = ({
                                             }
                                         })
                                         if(!item.isForwardChevron) {
-                                            let name = '';
-                                            if(item.text === 'Untitled Group') {
-                                                item.index < 1 ?
-                                                    name = 'Untitled Group'
-                                                :
-                                                    name = `Untitled Group ${item.index}`
-                                            } else {
-                                                name = item.text
-                                            }
-                                                
-                                            onSetGroupName(name)
+                                            let id = '';
+                                            id = item.id;
+                                            onSetGroupId(id)
                                         }
                                     }}
                                     iconContainerStyle={[styles.image, {backgroundColor:'transparent',borderRadius:0}]}

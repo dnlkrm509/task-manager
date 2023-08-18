@@ -179,12 +179,28 @@ const GroupLists = () => {
                     setModalDeleteConfirmationIsVisible(false);
                     setTrashIsRight(true);
                 }}
+                contentTop={30}
             >
-                <Button onPress={() => {
-                    setModalDeleteConfirmed(true)
-                    setTrashIsRight(true);
-                }}><Text>Delete</Text></Button>
-
+                <Button
+                    onPress={() => {
+                        setModalDeleteConfirmed(true)
+                        setTrashIsRight(true);
+                    }}
+                    buttonStyle={[styles.deleteButton]}
+                >
+                    <Text style={[styles.buttonText, {color:'red'}]}>Delete List</Text>
+                </Button>
+                <View style={{height:8,backgroundColor:Colors.listBackgroundColor,borderRadius:12}}></View>
+                <Button
+                    onPress={() => {
+                        setModalDeleteCancelled(true);
+                        setModalDeleteConfirmationIsVisible(false);
+                        setTrashIsRight(true);
+                    }}
+                    buttonStyle={[styles.deleteButton]}
+                >
+                    <Text style={[styles.buttonText]}>Cancel</Text>
+                </Button>
             </ModalUI>
             {
                 listCnt.uncheckedTodos.length ? (
@@ -225,7 +241,6 @@ const GroupLists = () => {
                             rightActionValue={-500}
                             onRightAction={onRightAction}
                             closeOnRowBeginSwipe
-                            onRowClose={()=> setModalDeleteCancelled(false)}
                         />
                     </ScrollView>
                 ) : (
@@ -251,6 +266,15 @@ const styles = StyleSheet.create({
     button: {
         borderRadius: 8,
         paddingVertical: 1,
+    },
+    deleteButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 15
+    },
+    buttonText: {
+        color: 'blue',
+        fontSize: 17
     },
     image: {
         borderRadius: 50,

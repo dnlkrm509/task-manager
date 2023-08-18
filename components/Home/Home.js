@@ -10,7 +10,6 @@ import GroupLists from "./GroupList";
 
 const Home = () => {
     const [modalIsVisible, setModalIsVisible] = useState(false);
-    const [groupName, setGroupName] = useState('');
     const [groupId, setGroupId] = useState('');
     const [initialState, setInitialState] = useState(false);
 
@@ -22,9 +21,6 @@ const Home = () => {
         setGroupId(id);
     }
 
-    const onSetGroupName = (name) => {
-        setGroupName(name);
-    }
 
     const onSetInitialState = (state) => {
         setInitialState(state);
@@ -45,7 +41,6 @@ const Home = () => {
                     modalIsVisible={modalIsVisible}
                     groupId={groupId}
                     onSetGroupId={(id) => onSetGroupId(id)}
-                    onSetGroupName={(name) => onSetGroupName(name)}
                     onSetModalIsVisible={(state) => {onSetModalIsVisible(state)}}
                     onSetInitialState={(state) => onSetInitialState(state)}
                 />

@@ -31,6 +31,7 @@ const ModalUI = ({
     let lineBreak = [styles.lineBreak];
     let modal = [styles.modal];
     let modalInnerContainer = [];
+    let content = [styles.content];
 
     if(position === 'bottomEditGroup') {
         lineBreak.push({
@@ -65,6 +66,9 @@ const ModalUI = ({
                 paddingHorizontal: 0,
             }
         ]);
+
+        content.push({paddingHorizontal: 0})
+
     }
 
     return (
@@ -147,7 +151,7 @@ const ModalUI = ({
                         </View>
                         
                     )}
-                    <View style={[styles.content,{
+                    <View style={[content,{
                                     position: 'absolute',
                                     top: contentTop,
                                     right: 0,
@@ -199,7 +203,8 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.lineBreak
     },
     content: {
-        padding: 24,
+        paddingVertical: 24,
+        paddingHorizontal: 24
     }
 });
 

@@ -258,12 +258,28 @@ const AddNew = ({
                                         setModalDeleteConfirmationIsVisible(false);
                                         setTrashIsRight(true);
                                     }}
+                                    contentTop={30}
                                 >
-                                    <Button onPress={() => {
-                                        setModalDeleteConfirmed(true)
-                                        setTrashIsRight(true);
-                                    }}><Text>Delete</Text></Button>
-
+                                    <Button
+                                        onPress={() => {
+                                            setModalDeleteConfirmed(true)
+                                            setTrashIsRight(true);
+                                        }}
+                                        buttonStyle={[styles.deleteButton]}
+                                    >
+                                        <Text style={[styles.buttonText, {color:'red'}]}>Delete List</Text>
+                                    </Button>
+                                    <View style={{height:10,backgroundColor:Colors.listBackgroundColor,borderRadius:12}}></View>
+                                    <Button
+                                        onPress={() => {
+                                            setModalDeleteCancelled(true);
+                                            setModalDeleteConfirmationIsVisible(false);
+                                            setTrashIsRight(true);
+                                        }}
+                                        buttonStyle={[styles.deleteButton]}
+                                    >
+                                        <Text style={[styles.buttonText]}>Cancel</Text>
+                                    </Button>
                                 </ModalUI>
                                 <SwipeListView
                                     data={newSublists}
@@ -336,6 +352,15 @@ const styles = StyleSheet.create({
         borderLeftWidth: 2,
         borderLeftColor: Colors.lineBreak,
         marginLeft: 20
+    },
+    deleteButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 15
+    },
+    buttonText: {
+        color: 'blue',
+        fontSize: 17
     },
     rowBack: {
       alignItems: 'center',
