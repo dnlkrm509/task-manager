@@ -11,7 +11,7 @@ const ModalUI = ({
     onSwipeComplete,
     propagateSwipe,
     swipeDirection,
-    onHideModal,
+    onModalHide,
     height,
     position,
     headerTitle,
@@ -76,7 +76,7 @@ const ModalUI = ({
             <Modal
                 style={modal}
                 isVisible={modalVisible}
-                onHideModal={onHideModal}
+                onModalHide={onModalHide}
                 hasBackdrop={hasBackdrop}
                 onBackdropPress={onBackdropPress}
                 onSwipeComplete={onSwipeComplete}
@@ -95,7 +95,7 @@ const ModalUI = ({
                                     </Text>
                                 </View>
                                 <Button
-                                    onPress={() => {onHideModal()}}
+                                    onPress={() => {onModalHide()}}
                                 >
                                     <Text style={styles.text}>{buttonText}</Text>
                                 </Button>
@@ -119,7 +119,7 @@ const ModalUI = ({
                                     </Text>
                                 </View>
                                 <Button
-                                    onPress={() => {onHideModal()}}
+                                    onPress={() => {onModalHide()}}
                                 >
                                     <Text style={styles.text}>{buttonText}</Text>
                                 </Button>
@@ -132,7 +132,7 @@ const ModalUI = ({
                         <View style={container}>
                             <View style={styles.header}>
                                 <Button
-                                    onPress={() => {onCancel();onHideModal()}}
+                                    onPress={() => {onCancel();onModalHide()}}
                                 >
                                     <Text style={styles.text}>Cancel</Text>
                                 </Button>
@@ -142,7 +142,7 @@ const ModalUI = ({
                                     </Text>
                                 </View>
                                 <Button
-                                    onPress={() => {if(buttonText==='Add'){onAdd();}if(buttonText==='Skip'){onSkip();}onHideModal();}}
+                                    onPress={() => {if(buttonText==='Add'){onAdd();}if(buttonText==='Skip'){onSkip();}onModalHide();}}
                                 >
                                     <Text style={styles.text}>{buttonText}</Text>
                                 </Button>

@@ -22,7 +22,7 @@ export const groupsReducer = (state,action) => {
             updatedTodo[updatableTodoID] = updatedItem;
             return updatedTodo;
         case 'DELETE':
-
+            return state.filter((todo) => todo.id !== action.id);
         default:
             return state;
     }

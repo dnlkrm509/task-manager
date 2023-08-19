@@ -167,7 +167,7 @@ const GroupLists = () => {
         <View>
             <ModalUI
                 modalVisible={modalDeleteConfirmarionIsVisible}
-                onHideModal={() => {
+                onModalHide={() => {
                     setModalDeleteCancelled(true);
                     setModalDeleteConfirmationIsVisible(false);
                 }}

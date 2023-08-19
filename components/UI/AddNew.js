@@ -45,7 +45,8 @@ const AddNew = ({
     secondButtonIconColor,
     secondButtonIconOnPress,
     ID,
-    onSelectGroupLists
+    onSelectGroupLists,
+    onFirstModalClose
 }) => {
     const [rowId, setRowId] = useState('');
     const [rowSwipeAnimatedValues] = useState(new Animated.Value(0));
@@ -246,7 +247,7 @@ const AddNew = ({
                             <View>
                                 <ModalUI
                                     modalVisible={modalDeleteConfirmarionIsVisible}
-                                    onHideModal={() => {
+                                    onModalHide={() => {
                                         setModalDeleteCancelled(true);
                                         setModalDeleteConfirmationIsVisible(false);
                                     }}
@@ -321,7 +322,7 @@ const AddNew = ({
                         <View style={containerStyle}>
                             <Button
                                 buttonStyle={[buttonStyle,styles.groupButton,{width: deviceWidth*80/100}]}
-                                onPress={() => {onSelectGroupLists(ID)}}
+                                onPress={() => {onSelectGroupLists(ID);onFirstModalClose()}}
                                 fullWidth
                             >
                                 <Text style={[styles.textStyle, textStyle, { fontWeight: 'normal',color:Colors.groupText }]}>
