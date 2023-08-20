@@ -13,6 +13,7 @@ import { GroupContext } from '../../contexts/group-context';
 
 const NewList = ({
     onSetModalIsVisible,
+    setIsManageGroupListsModalClosed,
     onSetInitialState,
     onSetGroupId
 }) => {
@@ -89,6 +90,7 @@ const NewList = ({
                             onPress: (groupName) => {
                                 onSetInitialState(true);
                                 onSetModalIsVisible(true);
+                                setIsManageGroupListsModalClosed(false);
                                 let id = Math.random().toString();
                                 onSetGroupId(id);
                                 groupCnx.dispatch({

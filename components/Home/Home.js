@@ -12,7 +12,11 @@ const Home = () => {
     const [modalIsVisible, setModalIsVisible] = useState(false);
     const [groupId, setGroupId] = useState('');
     const [initialState, setInitialState] = useState(false);
+    const [isManageGroupListsModalClosed, setIsManageGroupListsModalClosed] = useState(false);
 
+    const onSetIsManageGroupListsModalClosed = (state) => {
+        setIsManageGroupListsModalClosed(state)
+    }
     const onSetModalIsVisible = (state) => {
         setModalIsVisible(state);
     }
@@ -43,6 +47,8 @@ const Home = () => {
                     onSetGroupId={(id) => onSetGroupId(id)}
                     onSetModalIsVisible={(state) => {onSetModalIsVisible(state)}}
                     onSetInitialState={(state) => onSetInitialState(state)}
+                    isManageGroupListsModalClosed={isManageGroupListsModalClosed}
+                    setIsManageGroupListsModalClosed={(state) => onSetIsManageGroupListsModalClosed(state)}
                 />
             </ScrollView>
             <View style={{marginBottom:20}}>
@@ -50,6 +56,7 @@ const Home = () => {
                     onSetModalIsVisible={(state) => {onSetModalIsVisible(state)}}
                     onSetInitialState={(state) => onSetInitialState(state)}
                     onSetGroupId={(id) => onSetGroupId(id)}
+                    setIsManageGroupListsModalClosed={(state) => onSetIsManageGroupListsModalClosed(state)}
                 />
             </View>
         </View>

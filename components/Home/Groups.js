@@ -20,6 +20,8 @@ import { ListContext } from "../../contexts/list-context";
 const Groups = ({
     initialState,
     modalIsVisible,
+    isManageGroupListsModalClosed,
+    setIsManageGroupListsModalClosed,
     groupId,
     onSetGroupId,
     onSetModalIsVisible,
@@ -35,10 +37,9 @@ const Groups = ({
     const [newLists, setNewLists] = useState([]);
     const [groupLists, setGroupLists] = useState([]);
     const [middleModalData, setMiddleModalData] = useState([]);
-    const [isManageGroupListsModalClosed, setIsManageGroupListsModalClosed] = useState(false);
     const [isEditGroupModalClosed, setIsEditGroupModalClosed] = useState(true);
     const [isDialogAndroid, setIsDialogAndroid] = useState(false);
-    const [enteredValue, setEnteredValue] = useState('Group Name');
+    const [enteredValue, setEnteredValue] = useState(groupCnx.groups.find((group) => group.id === groupId)?.text);
 
     let listChecked = false;
 
@@ -203,7 +204,7 @@ const Groups = ({
                                     text: enteredValue,
                                 }
                             })
-                            setEnteredValue('Group Name');
+                            setEnteredValue(groupCnx.groups.find((group) => group.id === groupId).text);
                         }} />
                         <Dialog.Input
                             onChangeText={(enteredValue) => setEnteredValue(enteredValue)}
@@ -383,7 +384,7 @@ const Groups = ({
                                         }
                                     ],
                                     "plain-text",
-                                    "Group Name"
+                                    groupCnx.groups.find((group) => group.id === groupId)?.text
                                 )
                             }
                         }
@@ -399,11 +400,53 @@ const Groups = ({
                     <AddNew
                         containerStyle={[styles.detailsSearchContainer, {marginBottom:0,height:55}]}
                         buttonStyle={[styles.nameImageContainer, styles.button]}
-                        onPress={() => {}}
+                        onPress={() => {
+                            if(groupLists.length > 0) {
+                                // Update list group id to ''
+                                groupLists.forEach((item) => {
+                                    listCnt.dispatch({
+                                        type:'UPDATE',
+                                        id: item.id,
+                                        payload: {
+                                            groupId: '',
+                                            checked: false
+                                        }
+                                    })
+                                    listCnt.U_Dispatch({
+                                        type:'UNCHECKED_ADD',
+                                        id: item.id,
+                                        text: item.text,
+                                        index: item.index,
+                                        groupId: item.groupId
+                                    })
+                        
+                                    listCnt.Ch_Dispatch({
+                                        type:'CHECKED_DELETE',
+                                        id: item.id
+                                    })
+                                    
+                                    listCnt.U_Dispatch({
+                                        type:'UNCHECKED_UPDATE',
+                                        id: item.id,
+                                        payload: {
+                                            groupId: ''
+                                        }
+                                    })
+                                })
+                            }
+
+                            groupCnx.dispatch({
+                                type:'DELETE',
+                                id: groupId
+                            })
+                            setModalEditGroupIsVisible(false);
+                            setIsEditGroupModalClosed(true);
+                        }}
                         iconContainerStyle={[styles.image, {backgroundColor:'transparent',borderRadius:0}]}
-                        iconName='trash-outline'
+                        iconName={groupLists.length > 0 ? 'format-list-group' : 'trash-outline'}
                         iconSize={20}
                         iconColor='red'
+                        iconType={groupLists.length > 0 ? 'material-community' : null}
                         text={groupLists.length > 0 ? <Text>Ungroup Lists</Text> : <Text>Delete Group</Text>}
                         textStyle={{color:'red'}}
                         fullWidth

@@ -173,7 +173,7 @@ const GroupLists = () => {
                 }}
                 height={170}
                 position='bottomDeleteConfirmation'
-                headerTitle={`"list Name" will be permanently deleted.`}
+                headerTitle={`"${listCnt.uncheckedTodos.find((todo) => todo.id === rowId)?.text}" will be permanently deleted.`}
                 onBackdropPress={() => {
                     setModalDeleteCancelled(true);
                     setModalDeleteConfirmationIsVisible(false);
